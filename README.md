@@ -1,1 +1,1 @@
-# amazon_prime_sql_data_analysis
+# netflix_sql_data_analysis
