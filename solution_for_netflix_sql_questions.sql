@@ -45,6 +45,13 @@
     ORDER BY duration DESC, title ASC
 
 -- Q)7 Specific Genre Analysis
+    SELECT release_year, 
+    UNNEST(string_to_array(listed_in,',')) AS genre ,
+    COUNT(*) AS count_no
+    FROM netflix
+    WHERE release_year IS NOT NULL
+    GROUP BY release_year,genre
+    ORDER BY release_year DESC, count_no DESC
     
 -- Q)8 Count the number of Movies vs TV Shows
 -- Q)9 Find the most common rating for movies and TV shows
