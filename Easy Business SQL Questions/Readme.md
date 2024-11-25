@@ -16,7 +16,7 @@ This repository contains a set of easy SQL questions along with their solutions 
   ```sql
   SELECT type, COUNT(*) AS total_count
   FROM netflix
-  GROUP BY type;```
+  GROUP BY type;
   
 - **Objective**: This query reveals the total number of Movies and TV Shows available on the platform, broken down by their type
 
