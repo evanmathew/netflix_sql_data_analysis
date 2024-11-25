@@ -56,4 +56,45 @@
     GROUP BY genre
     ORDER BY no_of_content DESC
 
--- Q)9 
+-- Q)9 Find each year and the average numbers of content released in India on Netflix. Return the top 5 years with the highest avg content release!
+    WITH CTE AS (
+        SELECT 
+            EXTRACT(YEAR FROM date_added) AS year,
+            UNNEST(string_to_array(country, ',')) AS country
+        FROM 
+            netflix
+        WHERE 
+            date_added IS NOT NULL
+    )
+    SELECT 
+        year,
+        COUNT(*) AS total_titles,
+        ROUND(COUNT(*) * 1.0 / 12) AS avg_titles_per_month -- Assuming 12 months in a year
+    FROM 
+        CTE
+    WHERE 
+        country = 'India'
+    GROUP BY 
+        year
+    ORDER BY 
+        avg_titles_per_month DESC
+    LIMIT 5;
+
+-- Q)10 Categorize the content based on the presence of the keywords 'kill' and 'violence' in the description field. Label content as 'Bad' or 'Good' and count how many items fall into each category.
+    WITH CTE AS (SELECT 
+    title,
+    description,
+    CASE
+     	WHEN description ~* '(kill|violence)' THEN 'Bad'
+     	ELSE 'Good'
+    END AS category
+    FROM netflix 
+    )
+    
+    SELECT category, COUNT(*)
+    FROM CTE
+    GROUP BY category
+
+-- Q)11 Find all content without a director
+    SELECT * FROM netflix
+    WHERE director IS NULL
