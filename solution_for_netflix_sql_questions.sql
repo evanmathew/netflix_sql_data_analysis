@@ -44,17 +44,71 @@
     WHERE duration IS NOT NULL
     ORDER BY duration DESC, title ASC
 
--- Q)7 Specific Genre Analysis
-    SELECT release_year, 
-    UNNEST(string_to_array(listed_in,',')) AS genre ,
-    COUNT(*) AS count_no
-    FROM netflix
-    WHERE release_year IS NOT NULL
-    GROUP BY release_year,genre
-    ORDER BY release_year DESC, count_no DESC
+-- Q)7 Genre Popularity by Year ; Find the top 3 common genre for each release year.
+    WITH top_genre_ranks AS
+    (
+    SELECT 
+        release_year, 
+        genre, 
+        COUNT(*) AS title_count,
+        RANK() OVER (PARTITION BY release_year ORDER BY COUNT(*) DESC) AS genre_rank
+    FROM (
+        SELECT 
+            release_year, 
+            UNNEST(string_to_array(listed_in, ',')) AS genre
+        FROM 
+            netflix
+    ) AS genres
+    GROUP BY 
+        release_year, genre
+    ORDER BY 
+        release_year DESC, genre_rank
+    )
     
--- Q)8 Count the number of Movies vs TV Shows
--- Q)9 Find the most common rating for movies and TV shows
+    SELECT * FROM top_genre_ranks
+    WHERE genre_rank < 4
+    
+-- Q)8 Count the number of Movies vs TV Shows per Year
+    SELECT release_year,
+    type,
+    count(*) AS no_of_types
+    FROM netflix
+    GROUP BY release_year, type
+    ORDER BY release_year DESC, type ASC
+
+-- Q)9 Find the top 3 common rating for movies and TV shows
+    rating,
+    count(*) AS no_of_rating,
+    RANK() OVER (PARTITION BY type ORDER BY COUNT(*) DESC) AS ranks
+    FROM netflix
+    GROUP BY type, rating
+    )
+    
+    SELECT type, rating FROM rating_ranks
+    WHERE ranks < 4
+
 -- Q)10 List all movies released in a specific year (e.g., 2020)
--- Q)5List all movies that are documentaries
--- Q)5Find content added in the last 5 years
+    SELECT * FROM netflix 
+    WHERE release_year = 2020 AND type='Movie'
+    ORDER BY title ASC
+    
+-- Q)11 List all movies that are documentaries
+    SELECT DISTINCT(title),type, TRIM(genre) AS genre
+    FROM(
+    SELECT
+    	title,
+    	type,
+    	UNNEST(string_to_array(listed_in,',')) AS genre
+    	FROM netflix
+    )
+
+    WHERE genre = 'Documentaries' AND type='Movie'
+    
+-- Q)12 Find content added in the last 5 years
+    SELECT date_added
+    FROM netflix
+    WHERE date_added BETWEEN 
+          (SELECT MAX(date_added) FROM netflix) - INTERVAL '4 years'
+          AND (SELECT MAX(date_added) FROM netflix)
+    ORDER BY date_added ASC;
+    
