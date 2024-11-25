@@ -77,6 +77,8 @@
     ORDER BY release_year DESC, type ASC
 
 -- Q)9 Find the top 3 common rating for movies and TV shows
+    WITH rating_ranks AS(
+    SELECT
     rating,
     count(*) AS no_of_rating,
     RANK() OVER (PARTITION BY type ORDER BY COUNT(*) DESC) AS ranks
