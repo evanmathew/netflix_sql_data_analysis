@@ -98,3 +98,34 @@
 -- Q)11 Find all content without a director
     SELECT * FROM netflix
     WHERE director IS NULL
+
+-- Q)12 Most Popular Genre Per Year
+    WITH CTE AS (SELECT
+    release_year, 
+    UNNEST(string_to_array(listed_in, ',')) AS genre,
+    COUNT(*) AS total_count,
+    RANK() OVER (PARTITION BY release_year ORDER BY COUNT(*) DESC) AS genre_rank
+    FROM 
+        netflix
+    GROUP BY 
+        release_year, genre
+    ORDER BY 
+        release_year DESC, genre_rank)
+    	
+    SELECT release_year, genre, total_count FROM CTE
+    WHERE genre_rank=1
+
+-- Q)13 Content Longevity
+    SELECT 
+    type,
+    CASE 
+        WHEN type = 'Movie' THEN AVG(CAST(REGEXP_REPLACE(duration, '[^0-9]', '', 'g') AS INT)) -- replace text to just number 
+        WHEN type = 'TV Show' THEN ROUND(AVG(CAST(REGEXP_REPLACE(duration, '[^0-9]', '', 'g') AS INT)))
+    END AS avg_duration
+    FROM 
+        netflix
+    WHERE 
+        duration IS NOT NULL
+    GROUP BY 
+        type;
+
