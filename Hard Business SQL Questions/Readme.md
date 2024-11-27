@@ -1,7 +1,7 @@
 <h1>Hard SQL Questions with Answers and Objectives </h1>
 
 
-### 1. * Identify Titles with Maximum Longevity**
+### 1. ** Identify Titles with Maximum Longevity**
 
 - **Question**:  Identify Titles with Maximum Longevity.
 
@@ -16,7 +16,7 @@
 
 
 
-### 2. * Find cast who has acted in most of the content**
+### 2. ** Find cast who has acted in most of the content**
 
 - **Question**:  Identify Titles with Maximum Longevity.
 
@@ -43,15 +43,15 @@
 
 - **Answer**:
   ```sql
-  WITH CTE AS (SELECT 
-  			 release_year,
-  			 TRIM(UNNEST(string_to_array(listed_in,','))) AS genre,
-  			 COUNT(*) AS no_of_content,
-  			 RANK() OVER(PARTITION BY release_year ORDER BY COUNT(*) DESC) AS ranks
-  			 FROM netflix 
-  			 GROUP BY genre, release_year 
-  			 ORDER BY release_year DESC, ranks ASC 
-  			)
+  WITH CTE AS (
+      SELECT
+        release_year,
+  		  TRIM(UNNEST(string_to_array(listed_in,','))) AS genre,
+  		  COUNT(*) AS no_of_content,
+  		  RANK() OVER(PARTITION BY release_year ORDER BY COUNT(*) DESC) AS ranks
+  		  FROM netflix 
+      GROUP BY genre, release_year 
+  		ORDER BY release_year DESC, ranks ASC )
   
   SELECT * FROM CTE
   WHERE ranks<4
