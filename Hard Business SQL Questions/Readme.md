@@ -100,3 +100,24 @@
   ```
 
 
+
+
+### 6. ** Title Diversity by Country**
+
+- **Question**: List all the title produced by their country 
+- **Answer**:
+  ```sql
+  WITH CTE AS (
+      SELECT 
+          TRIM(UNNEST(string_to_array(country, ','))) AS country,
+          title
+      FROM netflix
+      WHERE country IS NOT NULL
+  )
+  SELECT *
+  FROM CTE
+  WHERE country != ''
+  ORDER BY country;
+  ```
+
+
