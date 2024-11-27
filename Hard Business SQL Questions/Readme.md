@@ -57,4 +57,25 @@
   WHERE ranks<4
   ```
     
+### 4. ** Actor who roled for any movie or tv show in the last 10 years**
 
+- **Question**: Find how many movies actor 'Salman Khan' appeared in last 10 years!
+
+- **Answer**:
+  ```sql
+  WITH cast_format AS (
+      SELECT 
+          REGEXP_REPLACE(TRIM(UNNEST(string_to_array(casts, ','))), '''', '', 'g') AS actors, 
+          title,
+          release_year
+      FROM netflix
+  ),
+  latest_years AS (
+      SELECT MAX(release_year) AS max_year FROM netflix
+  )
+  SELECT actors, COUNT(*) as no_of_content
+  FROM cast_format, latest_years
+  WHERE release_year BETWEEN max_year - 10 AND max_year
+  GROUP BY actors
+  HAVING actors = 'Salman Khan'
+  ```
