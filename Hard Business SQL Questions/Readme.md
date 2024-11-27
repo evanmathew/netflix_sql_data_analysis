@@ -79,3 +79,24 @@
   GROUP BY actors
   HAVING actors = 'Salman Khan'
   ```
+
+### 5. ** Top 10 actor who played most movies**
+
+- **Question**: Find the top 10 actors who have appeared in the highest number of movies produced in India.
+- **Answer**:
+  ```sql
+  WITH top_rank_actor_of_content AS (SELECT 
+  REGEXP_REPLACE(TRIM(UNNEST(string_to_array(casts, ','))), '''', '', 'g') AS actors, 
+  count(title) as no_of_movies,
+  DENSE_RANK() OVER(ORDER BY COUNT(title) DESC) as top_most_acted_actor
+  FROM netflix
+  WHERE type='Movie'
+  GROUP BY actors
+  ORDER BY top_most_acted_actor ASC
+  )
+  
+  SELECT * FROM top_rank_actor_of_content
+  WHERE top_most_acted_actor < 11
+  ```
+
+
