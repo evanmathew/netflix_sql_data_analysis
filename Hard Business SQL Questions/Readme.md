@@ -80,7 +80,7 @@
   HAVING actors = 'Salman Khan'
   ```
 
-### 5. ** Top 10 actor who played most movies**
+### 5. **Top 10 actor who played most movies**
 
 - **Question**: Find the top 10 actors who have appeared in the highest number of movies produced in India.
 - **Answer**:
@@ -102,7 +102,7 @@
 
 
 
-### 6. ** Title Diversity by Country**
+### 6. **Title Diversity by Country**
 
 - **Question**: List all the title produced by their country 
 - **Answer**:
@@ -121,3 +121,29 @@
   ```
 
 
+### 7. **Top-Performing Directors by Genre**
+
+- **Question**: Find top most directors of every genre 
+- **Answer**:
+  ```sql
+  WITH genre_format AS (
+      SELECT 
+          title,
+          director,
+          TRIM(UNNEST(string_to_array(listed_in, ','))) AS genre
+      FROM netflix
+      WHERE director IS NOT NULL
+  )
+  ,CTE AS (
+  SELECT 
+      genre,
+      director,
+      COUNT(*) AS title_count,
+      DENSE_RANK() OVER (PARTITION BY genre ORDER BY COUNT(*) DESC) AS top_genre_rank
+  FROM genre_format
+  GROUP BY genre, director
+  ORDER BY top_genre_rank ASC, genre)
+  
+  SELECT * FROM CTE 
+  WHERE top_genre_rank<2
+  ```
