@@ -1,7 +1,7 @@
 <h1>Hard SQL Questions with Answers and Objectives </h1>
 
 
-### 1. ** Identify Titles with Maximum Longevity**
+### 1. **Identify Titles with Maximum Longevity**
 
 - **Question**:  Identify Titles with Maximum Longevity.
 
@@ -16,7 +16,7 @@
 
 
 
-### 2. ** Find cast who has acted in most of the content**
+### 2. **Find cast who has acted in most of the content**
 
 - **Question**:  Identify Titles with Maximum Longevity.
 
@@ -57,7 +57,7 @@
   WHERE ranks<4
   ```
     
-### 4. ** Actor who roled for any movie or tv show in the last 10 years**
+### 4. **Actor who roled for any movie or tv show in the last 10 years**
 
 - **Question**: Find how many movies actor 'Salman Khan' appeared in last 10 years!
 
