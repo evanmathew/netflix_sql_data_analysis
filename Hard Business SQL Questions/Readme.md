@@ -217,3 +217,43 @@
   ORDER BY genre ASC, year_added ASC;
 
   ```
+
+### 10. **Missing Data Impact**
+
+- **Question A**: Assess how much data is missing in each column and how that might affect your ability to extract meaningful insights from the dataset
+- **Answer**:
+  ```sql
+  SELECT 
+      'director' AS column_name, 
+      COUNT(*) AS missing_count,
+      ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM netflix), 2) AS missing_percentage
+  FROM netflix
+  WHERE director IS NULL
+  
+  UNION ALL
+  
+  SELECT 
+      'country' AS column_name, 
+      COUNT(*) AS missing_count,
+      ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM netflix), 2) AS missing_percentage
+  FROM netflix
+  WHERE country IS NULL
+  
+  UNION ALL
+  
+  SELECT 
+      'date_added' AS column_name, 
+      COUNT(*) AS missing_count,
+      ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM netflix), 2) AS missing_percentage
+  FROM netflix
+  WHERE date_added IS NULL
+  
+  UNION ALL
+  
+  SELECT 
+      'rating' AS column_name, 
+      COUNT(*) AS missing_count,
+      ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM netflix), 2) AS missing_percentage
+  FROM netflix
+  WHERE rating IS NULL;
+  ```
