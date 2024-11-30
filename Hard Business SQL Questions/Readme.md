@@ -148,7 +148,7 @@
   WHERE top_genre_rank<2
   ```
 
-### 7. **Trending Content Additions**
+### 8. **Trending Content Additions**
 
 - **Question A**: Identify time-based insights, such as determining spike which years or months saw the most content additions
 - **Answer**:
@@ -193,5 +193,27 @@
   	
   SELECT * FROM rank_dist
   WHERE ranks < 4
+
+  ```
+
+### 9. **Genre Growth Over Time**
+
+- **Question A**: Identify the track how the availability of each genre evolves across years
+- **Answer**:
+  ```sql
+  WITH genre_growth AS (
+      SELECT 
+          TRIM(UNNEST(string_to_array(listed_in, ','))) AS genre,
+          EXTRACT(YEAR FROM date_added) AS year_added
+      FROM netflix
+      WHERE date_added IS NOT NULL
+  )
+  SELECT 
+      year_added,
+      genre,
+      COUNT(*) AS total_titles
+  FROM genre_growth
+  GROUP BY year_added, genre
+  ORDER BY genre ASC, year_added ASC;
 
   ```
