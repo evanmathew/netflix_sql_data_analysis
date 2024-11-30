@@ -147,3 +147,50 @@
   SELECT * FROM CTE 
   WHERE top_genre_rank<2
   ```
+
+### 7. **Trending Content Additions**
+
+- **Question**: Identify time-based insights, such as determining spike which years or months saw the most content additions
+- **Answer**:
+  ```sql
+  WITH CTE AS (
+  	SELECT 
+  		EXTRACT(YEAR FROM date_added) AS year_added, 
+  		TO_CHAR(date_added, 'Month') AS month_added,
+  		EXTRACT(MONTH FROM date_added) AS month_numb,
+  		COUNT(*) as no_of_content
+  	FROM netflix
+  	WHERE date_added IS NOT NULL
+  	GROUP BY year_added,month_added, month_numb
+  	ORDER BY year_added DESC, month_numb ASC
+  )
+  
+  SELECT 
+  	year_added, month_added, no_of_content 
+  FROM CTE
+  ```
+
+- **Question**: Identify genre's trends and determine which genres are gaining popularity in recent years
+- **Answer**:
+  ```sql
+  WITH genre_format AS (
+      SELECT 
+          TRIM(UNNEST(string_to_array(listed_in, ','))) AS genre,
+          EXTRACT(YEAR FROM date_added) AS year_added
+      FROM netflix
+      WHERE date_added IS NOT NULL
+  ),
+  rank_dist AS (
+  	SELECT 
+      	year_added,
+      	genre,
+      	COUNT(*) AS total_titles,
+  		DENSE_RANK() OVER (PARTITION BY year_added ORDER BY COUNT(genre) DESC) AS ranks
+  	FROM genre_format
+  	GROUP BY year_added, genre
+  	ORDER BY year_added DESC, total_titles DESC, ranks ASC )
+  	
+  SELECT * FROM rank_dist
+  WHERE ranks < 4
+
+  ```
