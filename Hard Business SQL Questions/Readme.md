@@ -150,7 +150,7 @@
 
 ### 7. **Trending Content Additions**
 
-- **Question**: Identify time-based insights, such as determining spike which years or months saw the most content additions
+- **Question A**: Identify time-based insights, such as determining spike which years or months saw the most content additions
 - **Answer**:
   ```sql
   WITH CTE AS (
@@ -169,8 +169,9 @@
   	year_added, month_added, no_of_content 
   FROM CTE
   ```
+  
 
-- **Question**: Identify genre's trends and determine which genres are gaining popularity in recent years
+- **Question B**: Identify genre's trends and determine which genres are gaining popularity in recent years
 - **Answer**:
   ```sql
   WITH genre_format AS (
